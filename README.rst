@@ -19,5 +19,7 @@ Usage
 
 example:
 
-::
+:: shell
+  flask-admin project drill
+  flask-admin app scene --project drill
 

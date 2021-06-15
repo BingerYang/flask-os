@@ -36,4 +36,13 @@ setup(
     python_requires='>=3.4',
     platforms=['all'],
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'flask-admin = flask_os.cli',
+        ],
+        # 'gui_scripts': [
+        #     'baz = flask_os:cli',
+        # ]
+    }
+
 )
