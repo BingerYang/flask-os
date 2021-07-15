@@ -8,7 +8,7 @@ ROOT = os.curdir
 
 
 def build_app(name, project=None):
-    path = os.path.join(project or ROOT, name)
+    path = os.path.join(project or ROOT, "app", name)
     os.mkdir(path)
     str_blue_print = f"""
 # -*- coding: utf-8 -*-
@@ -37,7 +37,7 @@ from . import api
     print(f"create app: {name}, include: __init__.py, views.py")
 
     if project:
-        with open(os.path.join(project, "app", "auto_load.py"), mode="wb") as fr:
+        with open(os.path.join(project, "app", "auto_load.py"), mode="w+") as fw:
             fw.write(f"from . import {name}{os.linesep}")
         print(f"add {name} to blueprint")
 
@@ -62,13 +62,13 @@ def build_project(name, path=None):
     manager = """
 # -*- coding: utf-8 -*-
 
-from aw_drill.cli import manager
+from {name}.cli import manager
 
 if __name__ == '__main__':
     manager()
     """
     file_manager = os.path.join(path, "manager.py")
     with open(file_manager, "w") as fw:
-        fw.write(manager)
-
+        fw.write(manager.format(name=name))
+    print("build project over")
     # 拷贝配置文件和目录

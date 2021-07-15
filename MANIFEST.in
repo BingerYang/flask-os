@@ -3,6 +3,7 @@ include MAINTAINERS
 include README.md
 include README.rst
 include requirements.txt
+include flask_os/conf/*
 
 recursive-include tests *
 recursive-include examples *

@@ -9,12 +9,12 @@ subparsers = parser.add_subparsers(help='sub-command help')
 
 def run_project(args):
     from flask_os import build_project
-    build_project(name=args.project, path=None)
+    build_project(name=args.name, path=None)
 
 
 def run_app(args):
     from flask_os import build_app
-    build_app(name=args.app, project=args.project)
+    build_app(name=args.name, project=args.project)
 
 
 parser_project = subparsers.add_parser('project', help='flask os create')
@@ -29,3 +29,6 @@ parser_app.set_defaults(func=run_app)
 
 args = parser.parse_args()
 args.func(args)
+import sys
+
+sys.exit(0)
