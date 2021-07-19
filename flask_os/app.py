@@ -18,19 +18,17 @@ from flask import Blueprint
 from {project or ".."}.metrics.extensions import register_blueprint
 
 api = Blueprint(__name__.split(".")[-1], __name__)
-register_blueprint(api, url_prefix='/common')
+register_blueprint(api, url_prefix='/{name}')
 
 from . import views
-
-    """
+"""
     with open(os.path.join(path, "__init__.py"), "w") as fw:
         fw.write(str_blue_print)
 
     str_views = """
 # -*- coding: utf-8 -*-
 from . import api
-
-    """
+"""
     with open(os.path.join(path, "views.py"), "w") as fw:
         fw.write(str_views)
 
@@ -45,21 +43,22 @@ from . import api
 def build_project(name, path=None):
     # 创建项目目录
     from .setting import ROOT_PATH
-    path = os.path.join(path or ROOT, name)
-    os.mkdir(path)
-    # # 通过解压缩 生成项目主体
+    path = path or ROOT
+    build_path = os.path.join(path, name)
+    os.mkdir(build_path)
+    # 通过解压缩 生成项目主体
     project_zip_path = os.path.join(ROOT_PATH, "conf", "project.zip")
     import zipfile
 
     with zipfile.ZipFile(project_zip_path) as zf:
-        zf.extractall(path)
+        zf.extractall(build_path)
 
     # 文件迁移
     from shutil import copyfile
     file_requirements = os.path.join(path, "requirements.txt")
     copyfile(os.path.join(ROOT_PATH, "conf", "requirements.txt"), file_requirements)
     print(f"add requirements.txt: {file_requirements}")
-    manager = """
+    manager = f"""
 # -*- coding: utf-8 -*-
 
 from {name}.cli import manager
@@ -69,6 +68,22 @@ if __name__ == '__main__':
     """
     file_manager = os.path.join(path, "manager.py")
     with open(file_manager, "w") as fw:
-        fw.write(manager.format(name=name))
+        fw.write(manager)
+    print(f"add manager.py: {file_manager}")
+
+    wsgi_file_tpl = f"""
+from gevent import monkey
+
+monkey.patch_all()
+
+from {name}.app import create_app
+
+app = create_app()    
+"""
+    file_wsgi = os.path.join(build_path, "wsgi.py")
+    with open(file_wsgi, "w") as fw:
+        fw.write(wsgi_file_tpl)
+    print(f"add wsgi.py: {file_wsgi}")
+
     print("build project over")
     # 拷贝配置文件和目录
