@@ -8,14 +8,16 @@ ROOT = os.curdir
 
 
 def build_app(name, project=None):
-    path = os.path.join(project or ROOT, "app", name)
+    project_root = os.path.abspath(ROOT)
+    project = os.path.abspath(project or os.path.join(project_root, os.path.basename(project_root)))
+    path = os.path.join(project, "app", name)
     os.mkdir(path)
     str_blue_print = f"""
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint
 
-from {project or ".."}.metrics.extensions import register_blueprint
+from ...metrics.extensions import register_blueprint
 
 api = Blueprint(__name__.split(".")[-1], __name__)
 register_blueprint(api, url_prefix='/{name}')
@@ -35,7 +37,7 @@ from . import api
     print(f"create app: {name}, include: __init__.py, views.py")
 
     if project:
-        with open(os.path.join(project, "app", "auto_load.py"), mode="w+") as fw:
+        with open(os.path.join(project, "app", "auto_load.py"), mode="a+") as fw:
             fw.write(f"from . import {name}{os.linesep}")
         print(f"add {name} to blueprint")
 
@@ -44,14 +46,20 @@ def build_project(name, path=None):
     # 创建项目目录
     from .setting import ROOT_PATH
     path = path or ROOT
-    build_path = os.path.join(path, name)
-    os.mkdir(build_path)
+    os.makedirs(path, exist_ok=True)
     # 通过解压缩 生成项目主体
     project_zip_path = os.path.join(ROOT_PATH, "conf", "project.zip")
-    import zipfile
+    import zipfile, shutil
 
-    with zipfile.ZipFile(project_zip_path) as zf:
-        zf.extractall(build_path)
+    from tempfile import TemporaryDirectory
+    with TemporaryDirectory() as dirname:
+        _path = os.path.join(dirname, name)
+        with zipfile.ZipFile(project_zip_path) as zf:
+            zf.extractall(_path)
+        shutil.move(_path, path)
+
+    # 是否改变tpl的位置
+    shutil.move(os.path.join(path, name, "etc"), os.path.join(path, "etc"))
 
     # 文件迁移
     from shutil import copyfile
@@ -80,7 +88,7 @@ from {name}.app import create_app
 
 app = create_app()    
 """
-    file_wsgi = os.path.join(build_path, "wsgi.py")
+    file_wsgi = os.path.join(path, name, "wsgi.py")
     with open(file_wsgi, "w") as fw:
         fw.write(wsgi_file_tpl)
     print(f"add wsgi.py: {file_wsgi}")
