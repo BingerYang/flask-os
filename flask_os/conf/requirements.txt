@@ -13,3 +13,4 @@ funcy
 python-dotenv
 # flask-cors
 blinker~=1.4
+six

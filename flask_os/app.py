@@ -17,7 +17,7 @@ def build_app(name, project=None):
 
 from flask import Blueprint
 
-from ...metrics.extensions import register_blueprint
+from ...metrics import register_blueprint
 
 api = Blueprint(__name__.split(".")[-1], __name__)
 register_blueprint(api, url_prefix='/{name}')
