@@ -39,7 +39,7 @@ setup(
     entry_points={
         'console_scripts': [
             # 'flask-admin = flask_os:cli',
-            'flask-admin = flask_os.cli',
+            'flask-admin = flask_os.cli:run',
         ],
         # 'gui_scripts': [
         #     'baz = flask_os:cli',
