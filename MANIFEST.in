@@ -13,3 +13,4 @@ recursive-exclude * __pycache__
 recursive-exclude dict
 recursive-exclude venv
 recursive-exclude * *.pyc
+recursive-exclude * .DS_Store

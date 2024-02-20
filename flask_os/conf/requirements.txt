@@ -1,16 +1,18 @@
 flask
-# sqlalchemy_utils
-flask-sqlalchemy
-sqlalchemy
-simplejson
-mysql-connector-python
-flask-migrate== 2.7.0
 flask-script
+flask-cors
+python-dotenv
+six
+funcy
+blinker~=1.4
+simplejson
+
+#sqlalchemy_utils
+#flask-sqlalchemy
+#sqlalchemy
+#flask-migrate== 2.7.0
+#mysql-connector-python
 #celery==4.4.6
 #celery-context==0.0.3.21030512
 #celery-sqlalchemy-scheduler
-funcy
-python-dotenv
-# flask-cors
-blinker~=1.4
-six
+
