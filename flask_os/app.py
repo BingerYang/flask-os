@@ -56,6 +56,16 @@ def build_project(name, path=None):
         _path = os.path.join(dirname, name)
         with zipfile.ZipFile(project_zip_path) as zf:
             zf.extractall(_path)
+
+        namelist = os.listdir(_path)
+        if "__MACOSX" in namelist:
+            shutil.rmtree(os.path.join(_path, "__MACOSX"), ignore_errors=True)
+            print("clear __MACOSX")
+        if "project" in namelist:
+            _tmp = os.path.join(_path, name)
+            os.rename(os.path.join(_path, "project"), _tmp)
+            _path = _tmp
+
         shutil.move(_path, path)
 
     # 是否改变tpl的位置

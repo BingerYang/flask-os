@@ -1,7 +1,9 @@
 import os
 from setuptools import setup, find_packages
 from flask_os import name, __description__, __version__
+from handle import zip_encode
 
+zip_encode()
 # read dev requirements
 try:
     fname = os.path.join(os.path.dirname(__file__), 'requirements.txt')
@@ -22,7 +24,7 @@ with open("MAINTAINERS") as f:
 setup(
     name=name,
     version=__version__,
-    packages=find_packages(exclude=['examples', 'tests']),
+    packages=find_packages(exclude=['examples', 'tests', "project"]),
     url='https://github.com/BingerYang/{}'.format(root),
     license='',
     author=author,
